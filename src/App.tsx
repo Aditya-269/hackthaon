@@ -12,6 +12,7 @@ import ResetPassword from "./components/auth/ResetPassword";
 // Using real Supabase auth provider
 import { AuthProvider } from "./components/auth/AuthProvider";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import FeedbackForm from "./components/FeedbackForm";
 import routes from "tempo-routes";
 
 function App() {
@@ -50,6 +51,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/report-incident"
+              element={
+                <ProtectedRoute>
+                  <FeedbackForm />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/settings"
               element={

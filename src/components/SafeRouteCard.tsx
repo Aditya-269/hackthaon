@@ -94,14 +94,17 @@ const SafeRouteCard = ({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+          {/* Fix: Wrap Input in a container with an absolute-positioned icon */}
           <div className="flex gap-2">
-            <Input
-              placeholder="Enter your destination"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              className="flex-1"
-              prefix={<MapPin className="h-4 w-4 text-gray-500" />}
-            />
+            <div className="relative flex items-center w-full">
+              <MapPin className="absolute left-3 h-4 w-4 text-gray-500" />
+              <Input
+                placeholder="Enter your destination"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                className="pl-10 flex-1" // Add left padding to prevent overlap
+              />
+            </div>
             <Button onClick={handleSearch} disabled={isLoading}>
               {isLoading ? "Searching..." : "Search"}
             </Button>

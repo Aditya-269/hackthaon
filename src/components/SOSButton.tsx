@@ -4,6 +4,7 @@ import { AlertCircle, AlertTriangle, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { sendEmergencySMSToContacts } from "@/lib/twilioService";
+import { makeEmergencyCallToNumber } from "@/lib/twilioDirectCall";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "./auth/AuthProvider";
 
@@ -257,7 +258,6 @@ const SOSButton = ({
         if (!mediaRecorderService.isCurrentlyRecording()) {
           await mediaRecorderService.startRecording(true, true);
           console.log("Emergency recording started automatically");
-          // Alert user that recording has started and will be saved to database
           // Remove alert notification
           console.log("Emergency recording started");
         }
@@ -366,11 +366,30 @@ const SOSButton = ({
 
       // Send initial emergency alert directly from database
       if (userLocation && user) {
+        // Send SMS to all contacts
         sendEmergencySMSToContacts(
           user.id,
           "EMERGENCY ALERT: I need help! This is my current location:",
           userLocation,
         ).catch((err) => console.error("Error sending emergency SMS:", err));
+
+        // Make a direct call to one specific emergency number automatically
+        const emergencyNumber = "+918917483689"; // Hardcoded emergency number
+        // Call immediately without waiting for user interaction
+        // Using a longer delay to ensure browser doesn't block it
+        setTimeout(() => {
+          console.log("Initiating emergency call now...");
+          makeEmergencyCallToNumber(emergencyNumber)
+            .then((result) => {
+              if (result.success) {
+                console.log(
+                  "Emergency call automatically initiated to",
+                  emergencyNumber,
+                );
+              }
+            })
+            .catch((err) => console.error("Error making emergency call:", err));
+        }, 1500); // Longer delay to ensure other operations complete first
       }
 
       // In a real implementation with Supabase:
